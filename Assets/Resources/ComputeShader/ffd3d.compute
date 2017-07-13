@@ -1,0 +1,54 @@
+﻿#pragma kernel VertexMain
+#pragma kernel NormalMain
+
+#define THREAD_GROUPS_X 32
+//==============================================================================================
+int3 controlPointNumbers = int3(3, 3, 3);
+StructuredBuffer<float3> controlPoints;
+StructuredBuffer<float> xBernsteinPolynomials;
+StructuredBuffer<float> yBernsteinPolynomials;
+StructuredBuffer<float> zBernsteinPolynomials;
+RWStructuredBuffer<float3> outputVertices;
+
+[numthreads(THREAD_GROUPS_X, 1, 1)]
+void VertexMain(uint3 id : SV_DispatchThreadID)
+{
+	uint index = id.x;
+	uint blockSizeZ = controlPointNumbers.z;
+	uint blockSizeYZ = controlPointNumbers.y * blockSizeZ;
+
+	float3 result = float3(0, 0, 0);
+	for (int i = 0; i < controlPointNumbers.x; ++i) {
+		for (int j = 0; j < controlPointNumbers.y; ++j) {
+			for (int k = 0; k < controlPointNumbers.z; ++k) {
+				float xBernstein = xBernsteinPolynomials[index * controlPointNumbers.x + i];
+				float yBernstein = yBernsteinPolynomials[index * controlPointNumbers.y + j];
+				float zBernstein = zBernsteinPolynomials[index * controlPointNumbers.z + k];
+				float3 position = controlPoints[i * blockSizeYZ + j * blockSizeZ + k];
+				result += xBernstein * yBernstein * zBernstein * position;
+			}
+		}
+	}
+	outputVertices[index] = result;
+}
+//==============================================================================================
+StructuredBuffer<float3> vertices;
+StructuredBuffer<int3> triangles;
+StructuredBuffer<int> offsets;
+StructuredBuffer<int> sizes;
+RWStructuredBuffer<float3> outputNormals;
+
+[numthreads(THREAD_GROUPS_X, 1, 1)]
+void NormalMain(uint3 id : SV_DispatchThreadID) {
+	uint index = id.x;
+	float3 normal = float3(0, 0, 0);
+	int begin = offsets[index];
+	int end = begin + sizes[index];
+	for (int i = begin; i < end; ++i) {
+		int3 t = triangles[i];
+		float3 v0 = vertices[t.y] - vertices[t.x];
+		float3 v1 = vertices[t.z] - vertices[t.x];
+		normal += cross(v0, v1);
+	}
+	outputNormals[index] = normalize(normal);
+}

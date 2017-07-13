@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 4026957171
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0738054ded9597045b3b12cb805ade57
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 33b2948c241747a360ee75ad62b345c7
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 17704c156e256dc419f9b73503f08b37, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 952abdc1f8989ba4d8f29ed5c1958e4b, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/Battlehub/RTSaveLoad/ResourceMaps/ResourceMap_bundledemo__bd58f659-1ef2-48e3-b7f2-7e7467b82123.prefab
+- Assets/Battlehub/Effects/GlowingOrb/Materials/Smoke30Frames_0.png
+Dependencies: []
